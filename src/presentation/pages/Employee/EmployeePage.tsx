@@ -1,9 +1,8 @@
 import { type FC, useMemo, useState } from "react";
-import type { EmployeePageProps } from "./EmployeePageProps";
 
 const fmt = (v: number) => v.toFixed(2);
 
-const EmployeePage: FC<EmployeePageProps> = ({}) => {
+const EmployeePage: FC = () => {
   const [gross, setGross] = useState<number>(3500);
   const [casRate, setCasRate] = useState<number>(0.25); // pension (CAS)
   const [cassRate, setCassRate] = useState<number>(0.1); // health (CASS)
