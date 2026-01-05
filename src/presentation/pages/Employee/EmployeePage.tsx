@@ -1,26 +1,28 @@
 import { type FC, useMemo, useState } from "react";
+import "./EmployeePage.module.css";
+import { EmployeeService } from "../../../features/tax-calculator/api/EmployeeService";
 
 const fmt = (v: number) => v.toFixed(2);
 
 const EmployeePage: FC = () => {
-  const [gross, setGross] = useState<number>(3500);
+  const [gross, setGross] = useState<number>(4050);
   const [casRate, setCasRate] = useState<number>(0.25); // pension (CAS)
   const [cassRate, setCassRate] = useState<number>(0.1); // health (CASS)
   const [taxRate, setTaxRate] = useState<number>(0.1); // income tax
+  const minWage: number = 4050;
+  const employeeService: EmployeeService = new EmployeeService();
 
-  const { cas, cass, taxable, incomeTax, net } = useMemo(() => {
-    const cas = gross * casRate;
-    const cass = gross * cassRate;
-    const taxable = Math.max(0, gross - cas - cass);
-    const incomeTax = taxable * taxRate;
-    const net = gross - cas - cass - incomeTax;
-    return { cas, cass, taxable, incomeTax, net };
-  }, [gross, casRate, cassRate, taxRate]);
+  const { cas, cass, taxable, personalDeduction, incomeTax, net } =
+    useMemo(() => {
+      return employeeService.computeNetSalaryFromGross(
+        { gross, casRate, cassRate, taxRate },
+        minWage
+      );
+    }, [gross, casRate, cassRate, taxRate]);
 
   return (
-    <div>
+    <div className="pageContainer">
       <h1>Employee Page</h1>
-
       <section style={{ marginBottom: 12 }}>
         <label style={{ display: "block", marginBottom: 8 }}>
           Gross salary (RON):
@@ -109,6 +111,12 @@ const EmployeePage: FC = () => {
                 CASS ({(cassRate * 100).toFixed(1)}%)
               </td>
               <td style={{ padding: 8, textAlign: "right" }}>{fmt(cass)}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: 8 }}>Personal Deduction</td>
+              <td style={{ padding: 8, textAlign: "right" }}>
+                {fmt(personalDeduction)}
+              </td>
             </tr>
             <tr>
               <td style={{ padding: 8 }}>Taxable base</td>
