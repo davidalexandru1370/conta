@@ -1,4 +1,5 @@
 import { type FC, useMemo, useState } from "react";
+import { Link } from "react-router";
 import "./EmployeePage.module.css";
 import { EmployeeService } from "../../../features/tax-calculator/api/EmployeeService";
 
@@ -16,13 +17,20 @@ const EmployeePage: FC = () => {
     useMemo(() => {
       return employeeService.computeNetSalaryFromGross(
         { gross, casRate, cassRate, taxRate },
-        minWage
+        minWage,
       );
     }, [gross, casRate, cassRate, taxRate]);
 
   return (
     <div className="pageContainer">
       <h1>Employee Page</h1>
+      <nav style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+        <Link to="/employee">Employee</Link>
+        <Link to="/micro-srl">Micro SRL</Link>
+        <Link to="/srl">SRL</Link>
+        <Link to="/self-employed">Self-employed</Link>
+        <Link to="/comparison">Comparison</Link>
+      </nav>
       <section style={{ marginBottom: 12 }}>
         <label style={{ display: "block", marginBottom: 8 }}>
           Gross salary (RON):
